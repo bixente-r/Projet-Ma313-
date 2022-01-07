@@ -80,8 +80,15 @@ A4 = np.array([[0, 1], [1, 0]])
 
 print("Matrice A3 sujet")
 lib.affichage_méthode3(A3)
+print("####################################")
 print("Matrice A4 sujet")
 lib.affichage_méthode3(A4)
+print("####################################")
+print("Matrice symétrique aléatoire")
+lib.affichage_méthode3(Ms[0])
+print("####################################")
+print("Matrice symétrique aléatoire")
+lib.affichage_méthode3(Ms[1])
 
 
 ###### Introduction à la méthode de diagonalisation par QR ######
