@@ -55,22 +55,21 @@ def méthode_puissance_itérée(A, epsilon=10**-10, Nitermax=250):
     """
     mdp = matrice_def_pos(A)
     ms = matrice_sym(A)
-    #At = np.transpose(A)
-    #a = np.dot(At,A)
     if (mdp != True or ms != True):
         pass
     else:
         n,n = np.shape(A)
-        x0 = np.zeros((n,1))
-        x0[:,0] = 1
-        x = x0
+        # x0 = np.zeros((n,1))
+        # x0[:,0] = 1
+        # x = x0
+        x = np.random.rand(n, 1)
+        norme_x = np.linalg.norm(x)
+        w0 = (1/norme_x)*x
         Niter = 0
         #print(np.linalg.norm(x), "\n")
-        w0 = (1/np.linalg.norm(x))*x
+        # w0 = (1/np.linalg.norm(x))*x
         w = w0
         err = epsilon + 1
-        norm_c = list()
-        list_w = list()
 
         while(Nitermax > Niter and err > epsilon):
             wk = w
@@ -83,9 +82,8 @@ def méthode_puissance_itérée(A, epsilon=10**-10, Nitermax=250):
             Niter += 1
             err = np.linalg.norm(w-wk)
             #print(Niter,err,"---------------------","\n")
-            list_w.append(w)
-            norm_c.append(np.linalg.norm(c))
-    return list_w[-1], norm_c[-1], Niter, err
+            norm_c = np.linalg.norm(c)
+    return w, norm_c, Niter, err
 
 
 def norme_euclidienne(A):
@@ -131,16 +129,17 @@ def méthode_puissance_inverse(A, epsilon=10**-10, Nitermax=250):
         print("")
     else:
         n,n = np.shape(A)
-        x0 = np.zeros((n,1))
-        x0[:,0] = 1
-        x = x0
+        # x0 = np.zeros((n,1))
+        # x0[:,0] = 1
+        # x = x0
+        x = np.random.rand(n, 1)
+        norme_x = np.linalg.norm(x)
+        w0 = (1/norme_x)*x
         Niter = 0
         #print(np.linalg.norm(x), "\n")
-        w0 = (1/np.linalg.norm(x))*x
+        # w0 = (1/np.linalg.norm(x))*x
         w = w0
         err = epsilon + 1
-        norm_c = list()
-        list_w = list()
 
         while(Nitermax > Niter and err > epsilon):
             wk = w
@@ -153,10 +152,9 @@ def méthode_puissance_inverse(A, epsilon=10**-10, Nitermax=250):
             Niter += 1
             err = np.linalg.norm(w-wk)
             #print(Niter,err,"---------------------","\n")
-            list_w.append(w)
-            norm_c.append(np.linalg.norm(c))
-            vp = 1/norm_c[-1]
-    return list_w[-1], norm_c[-1], vp, Niter, err
+            norm_c = np.linalg.norm(c)
+            vp = 1/norm_c
+    return w, norm_c, vp, Niter, err
 
 
 def norme_euclidienne_2(A):
@@ -196,7 +194,7 @@ def conditionnement(A):
 
 ###### Adaptation au cas d'une matrice quelconque ######
 
-def méthode_puissance_itérée2(A, epsilon=10**-10, Nitermax=250):
+def méthode_puissance_itérée2(A, epsilon=10**-10, Nitermax=500):
     """
     Applique la méthode de la puissance itérée à une matrice quelconque
 
@@ -208,51 +206,49 @@ def méthode_puissance_itérée2(A, epsilon=10**-10, Nitermax=250):
         - Nombre d'itérations
         - Dernier écart calculé
     """
-    mdp = matrice_def_pos(A)
-    ms = matrice_sym(A)
-    print("\n")
+    # print("\n")
     n,n = np.shape(A)
-    x0 = np.zeros((n,1))
-    x0[:,0] = 1
-    x = x0
+    # x0 = np.zeros((n,1))
+    # x0[:,0] = 1
+    # x = x0
+    x = np.random.rand(n, 1)
+    norme_x = np.linalg.norm(x)
+    w0 = (1/norme_x)*x
     Niter = 0
     #print(np.linalg.norm(x), "\n")
-    w0 = (1/np.linalg.norm(x))*x
+    # w0 = (1/np.linalg.norm(x))*x
     w = w0
-    w2 = w0
     err = epsilon + 1
-    err2 = epsilon + 1
-    norm_c = list()
-    list_w = list()
-    norm_c2 = list()
-    list_w2 = list()
 
-    while(Nitermax > Niter and (err > epsilon or err2 > epsilon)):
-        wk = w #((-1)**Niter)*
-        wk2 = ((-1)**Niter)*w2
-        # print("wk = ", wk, "\n")
+    while(Nitermax > Niter and err > epsilon):
+        wk = w
+        #print("wk = ", wk, "\n")
         c = np.dot(A,wk)
-        c2 = np.dot(A,wk2)
         #print("norm c = ", np.linalg.norm(c))
         #print("c = ", c,"\n")
         w = (1/np.linalg.norm(c))*c
-        w2 = (1/np.linalg.norm(c2))*c2
         #print("wk+1 = ",w,"\n")
         Niter += 1
         err = np.linalg.norm(w-wk)
-        err2 = np.linalg.norm(w2-wk2)
         #print(Niter,err,"---------------------","\n")
-        list_w.append(w)
-        norm_c.append(np.linalg.norm(c))
-        list_w2.append(w2)
-        norm_c2.append(np.linalg.norm(c2))
-    if err < epsilon:
-        sortie = list_w[-1], norm_c[-1], Niter, err, str(1), 
-    else:
-        sortie = list_w2[-1], norm_c2[-1], Niter, err2, str(2),        
-    return sortie
+        # list_w.append(w)
+        norm_c = np.linalg.norm(c)
 
+    if Niter >= Nitermax:
+        print("Le nombre maximal d'itération est dépassé.")
+        wk = w
+        c = np.dot(A, wk)*(-1)
+        w = (1 / np.linalg.norm(c))*c
+        err = np.linalg.norm(w-wk)
+        norm_c = np.linalg.norm(c)
 
+        if err < epsilon:
+            cas = 1
+        elif err >= epsilon:
+            cas = 2
+    elif err <= epsilon:
+        cas=3
+    return w, norm_c, Niter, err, cas
 
 ###### Introduction à la méthode de diagonalisation par QR ######
 
@@ -381,8 +377,16 @@ def affichage_cond2(A):
 def affichage_méthode3(A):
     mpi_A = méthode_puissance_itérée2(A)
     eig_A = np.linalg.eig(A)
+    cas = mpi_A[4]
     print("\nMatrice : \n", A)
-    print("\n- valeur propre max de A : ", mpi_A[1], "\n- vecteur propre associé : \n", mpi_A[0], "\n- nombre d'itération : ", mpi_A[3], "\n- erreur : ", mpi_A[2])
+    if cas == 1:
+        print("\nLa suite wk diverge mais la suite (-1)*wk converge")
+        print("\n- valeur propre max de A : ", mpi_A[1], "\n- vecteur propre associé : \n", mpi_A[0], "\n- nombre d'itération : ", mpi_A[2], "\n- erreur : ", mpi_A[3])
+    elif cas == 2:
+        print("\nLes suites wk et (-1)^k*wk divergent\n")
+    elif cas == 3:
+        print("\nLa suite wk converge")
+        print("\n- valeur propre max de A : ", mpi_A[1], "\n- vecteur propre associé : \n", mpi_A[0], "\n- nombre d'itération : ", mpi_A[2], "\n- erreur : ", mpi_A[3])
     print("\nDiagonalisation de A avec numpy : ")
     print("\n- valeurs propres de A : \n", eig_A[0], "\n- matrice de passage associée : \n", eig_A[1])
 
@@ -393,3 +397,4 @@ def affichage_méthode4(A):
     print("\n- matrice triangulaire sup Ak : \n", mpi_A[0], "\n- matrice de passage orthogonale P : \n", mpi_A[1], "\n- nombre d'itération : ", mpi_A[2], "\n- valeur maximale Mk : ", mpi_A[3])
     print("\nDiagonalisation de A avec numpy : ")
     print("\n- valeurs propres de A : \n", eig_A[0], "\n- matrice de passage associée : \n", eig_A[1])
+
